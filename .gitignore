@@ -12,3 +12,11 @@
 *.out
 
 blog.yaml
+
+# 模块依赖索文件
+go.sum
+# 版本控制文件
+.svn
+.git/
+# ide 配置文件
+.idea
