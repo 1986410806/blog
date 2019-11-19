@@ -14,7 +14,8 @@ type GormModel struct {
 
 var db *gorm.DB
 
-func OpenDB(url string) (err error) {
+func OpenDB(url string) {
+	var err error
 	// 设置表前缀
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
 		return "t_" + defaultTableName
@@ -32,6 +33,7 @@ func OpenDB(url string) (err error) {
 
 	if err = db.AutoMigrate(models.Models...).Error; nil != err {
 		log.Errorf("auto migrate tables failed: %s", err.Error())
+		panic(err)
 	}
 	return
 }

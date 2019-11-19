@@ -2,22 +2,24 @@ package responses
 
 import "blog/app/models"
 
-type UserResponse struct {
+var UserResponse = newUserResponse()
+
+type userResponse struct {
 }
 
-func NewUserResponse() UserResponse {
-	return UserResponse{}
+func newUserResponse() *userResponse {
+	return &userResponse{}
 }
 
-func (userResponse UserResponse) List(users []models.User) (list []map[string]interface{}) {
+func (userResponse userResponse) List(users []models.User) (list Results) {
 	for _, user := range users {
 		list = append(list, userResponse.Item(&user))
 	}
 	return list
 }
 
-func (userResponse UserResponse) Item(user *models.User) map[string]interface{} {
-	return map[string]interface{}{
+func (userResponse userResponse) Item(user *models.User) Result {
+	return Result{
 		"ID":          user.ID,
 		"username":    user.Username.String,
 		"email":       user.Email.String,

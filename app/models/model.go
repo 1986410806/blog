@@ -86,7 +86,7 @@ type User struct {
 type UserToken struct {
 	gorm.Model
 	Token     string `gorm:"size:32;unique;not null" json:"token" form:"token"`
-	UserId    int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`
+	UserId    uint   `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`
 	ExpiredAt int64  `gorm:"not null" json:"expiredAt" form:"expiredAt"`
 	Status    int    `gorm:"not null;index:idx_status;default:0" json:"status" form:"status"`
 }
@@ -121,7 +121,7 @@ type Tag struct {
 type Article struct {
 	gorm.Model
 	CategoryId  int64  `gorm:"index:idx_category_id;not null" json:"categoryId" form:"categoryId"` // 分类编号
-	UserId      int64  `gorm:"index:idx_user_id;default:0" json:"userId" form:"userId"`            // 所属用户编号
+	UserId      uint   `gorm:"index:idx_user_id;default:0" json:"userId" form:"userId"`            // 所属用户编号
 	Title       string `gorm:"size:128;not null;" json:"title" form:"title"`                       // 标题
 	Summary     string `gorm:"type:text" json:"summary" form:"summary"`                            // 摘要
 	Content     string `gorm:"type:longtext;not null;" json:"content" form:"content"`              // 内容
@@ -142,7 +142,7 @@ type ArticleTag struct {
 // 评论
 type Comment struct {
 	gorm.Model
-	UserId     int64  `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"`             // 用户编号
+	UserId     uint   `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"`             // 用户编号
 	EntityType string `gorm:"index:idx_entity_type;not null" json:"entityType" form:"entityType"` // 被评论实体类型
 	EntityId   int64  `gorm:"index:idx_entity_id;not null" json:"entityId" form:"entityId"`       // 被评论实体编号
 	Content    string `gorm:"type:text;not null" json:"content" form:"content"`                   // 内容
@@ -153,7 +153,7 @@ type Comment struct {
 // 收藏
 type Favorite struct {
 	gorm.Model
-	UserId     int64  `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"`                     // 用户编号
+	UserId     uint   `gorm:"index:idx_user_id;not null" json:"userId" form:"userId"`                     // 用户编号
 	EntityType string `gorm:"index:idx_entity_type;size:32;not null" json:"entityType" form:"entityType"` // 收藏实体类型
 	EntityId   int64  `gorm:"index:idx_entity_id;not null;default:0" json:"entityId" form:"entityId"`     // 收藏实体编号
 }
@@ -162,7 +162,7 @@ type Favorite struct {
 type Message struct {
 	gorm.Model
 	FromId       int64  `gorm:"not null" json:"fromId" form:"fromId"`                    // 消息发送人
-	UserId       int64  `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"` // 用户编号(消息接收人)
+	UserId       uint   `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"` // 用户编号(消息接收人)
 	Content      string `gorm:"type:text;not null" json:"content" form:"content"`        // 消息内容
 	QuoteContent string `gorm:"type:text" json:"quoteContent" form:"quoteContent"`       // 引用内容
 	Type         int    `gorm:"not null" json:"type" form:"type"`                        // 消息类型
