@@ -25,7 +25,6 @@ type userService struct {
 
 // 登录
 func (this *userService) SignIn(username, password string) (*models.User, error) {
-	println(222)
 	if len(username) == 0 {
 		return nil, errors.New("用户名/邮箱不能为空")
 	}

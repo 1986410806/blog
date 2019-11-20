@@ -16,7 +16,7 @@ require (
 	github.com/iris-contrib/formBinder v5.0.0+incompatible // indirect
 	github.com/iris-contrib/httpexpect v0.0.0-20180314041918-ebe99fcebbce // indirect
 	github.com/iris-contrib/middleware/cors v0.0.0-20191028172159-41f72a73786a
-	github.com/iris-contrib/middleware/jwt v0.0.0-20191111233249-6e1f5f92190e // indirect
+	github.com/iris-contrib/middleware/jwt v0.0.0-20191111233249-6e1f5f92190e
 	github.com/jinzhu/gorm v1.9.11
 	github.com/jordan-wright/email v0.0.0-20190819015918-041e0cec78b0 // indirect
 	github.com/json-iterator/go v1.1.8 // indirect

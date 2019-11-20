@@ -1,6 +1,7 @@
 package services
 
 import (
+	"blog/config"
 	"github.com/dgrijalva/jwt-go"
 	"time"
 )
@@ -25,5 +26,5 @@ func (userToken UserTokenService) MakeToken(uid uint) (string, error) {
 			"exp":       time.Now().Add(10 * time.Hour * time.Duration(1)).Unix(),
 		})
 
-	return token.SignedString([]byte("My Secret"))
+	return token.SignedString([]byte(config.Conf.JwtSecret))
 }

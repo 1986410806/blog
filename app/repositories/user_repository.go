@@ -23,7 +23,8 @@ func (this *UserRepository) List() (users []models.User) {
 	return users
 }
 
-func (this *UserRepository) GetById(id uint) (user *models.User) {
+func (this *UserRepository) GetById(id uint) *models.User {
+	var user = &models.User{}
 	this.db.First(&user, id)
 	return user
 }

@@ -17,6 +17,8 @@ type Config struct {
 
 	MySqlUrl string `yaml:"MySqlUrl"` // 数据库连接地址
 
+	// jwt 加密密匙
+	JwtSecret string `yaml:"JwtSecret"`
 	// Github
 	Github struct {
 		ClientID     string `yaml:"ClientID"`

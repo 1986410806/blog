@@ -3,6 +3,7 @@ package routes
 import (
 	"blog/app/web/controllers"
 	adminv1 "blog/app/web/controllers/admin/v1"
+	"blog/app/web/middlewares"
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/mvc"
 )
@@ -16,13 +17,15 @@ func InitRouter(application *iris.Application) {
 	webRoute(application)
 }
 
-func adminRoute(application *iris.Application) {
-	application.Get("/api/admin", func(context iris.Context) {
+func adminRoute(api *iris.Application) {
+	api.Get("/api/admin", func(context iris.Context) {
 		context.WriteString("hello admin api")
 	})
-	mvc.Configure(application.Party("/api/admin/v1"), func(v1 *mvc.Application) {
-		// 登录相关接口
-		v1.Handle(adminv1.NewLoginController())
+	// 登录相关接口
+	mvc.New(api.Party("/api/admin/v1")).Handle(adminv1.NewLoginController())
+	mvc.Configure(api.Party("/api/admin/v1"), func(v1 *mvc.Application) {
+		v1.Router.Use(middlewares.JwtHandler().Serve)
+		v1.Party("/user").Handle(adminv1.NewUserController())
 	})
 }
 

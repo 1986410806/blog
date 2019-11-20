@@ -3,7 +3,8 @@ package v1
 import (
 	"blog/app/repositories"
 	"blog/app/services"
-	"github.com/kataras/iris"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
 
@@ -21,6 +22,8 @@ func NewUserController() *UserController {
 }
 
 func (c *UserController) Get() *simple.JsonResult {
-	//var id  = c.Ctx.FormValue('')
-	//c.UserRepository.GetById(id)
+	Claims := c.Ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
+	id := (Claims["id"]).(float64)
+	user := c.UserRepository.GetById(uint(id))
+	return simple.JsonData(user)
 }
