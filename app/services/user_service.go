@@ -5,7 +5,6 @@ import (
 	"blog/app/models"
 	"blog/app/repositories"
 	"errors"
-	"fmt"
 	"github.com/mlogclub/simple"
 )
 
@@ -35,7 +34,6 @@ func (this *userService) SignIn(username, password string) (*models.User, error)
 	if err := common.IsValidateEmail(username); err == nil { // 如果用户输入的是邮箱
 		user = this.userRepository.GetByEmail(username)
 	} else {
-		fmt.Println(this)
 		user = this.userRepository.GetByUsername(username)
 	}
 	if user == nil {

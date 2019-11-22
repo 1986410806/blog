@@ -30,7 +30,7 @@ func adminRoute(api *iris.Application) {
 }
 
 func ApiRoute(application *iris.Application) {
-	mvc.New(application.Party("/api/v1/test")).Handle(controllers.NewTestController())
+	mvc.New(application.Party("/api/test")).Handle(controllers.NewTestController())
 }
 
 func webRoute(application *iris.Application) {

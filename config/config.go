@@ -17,6 +17,11 @@ type Config struct {
 
 	MySqlUrl string `yaml:"MySqlUrl"` // 数据库连接地址
 
+	Redis struct {
+		Host string `yaml:"Host"`
+		Port int    `yaml:"Port"`
+		DB   int    `yaml:"DB"`
+	} `yaml:"Redis"`
 	// jwt 加密密匙
 	JwtSecret string `yaml:"JwtSecret"`
 	// Github

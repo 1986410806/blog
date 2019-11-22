@@ -8,10 +8,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-type GormModel struct {
-	Id int64 `gorm:"PRIMARY_KEY;AUTO_INCREMENT" json:"id" form:"id"`
-}
-
 var db *gorm.DB
 
 func OpenDB(url string) {

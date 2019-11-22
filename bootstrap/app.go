@@ -16,17 +16,25 @@ import (
 	"syscall"
 )
 
-func Run() {
+// 注册 web 程序所需要 服务
+func Register() *iris.Application {
 	app := iris.New()
 	// 初始化数据库
 	database.OpenDB(config.Conf.MySqlUrl)
+	// redis 初始化
+	database.RedisInit()
 
 	// 初始化日志
 	initLogrus()
 	// 初始化路由
 	routes.InitRouter(app)
 
-	app.AllowMethods(iris.MethodOptions)
+	return app
+}
+
+// 运行 web 程序
+func Run(app *iris.Application) error {
+
 	server := &http.Server{Addr: ":" + config.Conf.Port}
 
 	handleSignal(server)
@@ -43,14 +51,13 @@ func Run() {
 		TimeFormat:                        "2006-01-02 15:04:05",
 		Charset:                           "UTF-8",
 	}))
-
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
 // 中间件注册
 func registerMiddleware(app *iris.Application) {
+
+	app.AllowMethods(iris.MethodOptions)
 
 	app.Configure(iris.WithOptimizations)
 	// 注册 header 跨域设置

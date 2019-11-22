@@ -1,22 +1,24 @@
 package v1
 
 import (
-	"blog/app/responses"
+	"blog/app/common/jwt"
+	"blog/app/repositories"
 	"blog/app/services"
+	"blog/app/web/responses"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
 
 type LoginController struct {
-	Ctx         iris.Context
-	UserService services.UserService
-	UserToken   *services.UserTokenService
+	Ctx            iris.Context
+	UserService    services.UserService
+	UserRepository *repositories.UserRepository
 }
 
 func NewLoginController() *LoginController {
 	return &LoginController{
-		UserService: services.NewUserService(),
-		UserToken:   services.NewUserTokenService(),
+		UserService:    services.NewUserService(),
+		UserRepository: repositories.NewUserRepository(),
 	}
 }
 
@@ -30,14 +32,15 @@ func (this LoginController) PostLogin() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	token, err := this.UserToken.MakeToken(user.ID)
+	token, err := jwt.MakeToken(user)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
+	this.UserRepository.LastLoginTimeById(user)
 
 	return simple.JsonData(responses.UserTokenResponse.UserToken(user, token, ref))
 }
 
 func (this *LoginController) AnyLoginOut() *simple.JsonResult {
-	return simple.JsonData("a")
+	return simple.JsonData("res:ok")
 }

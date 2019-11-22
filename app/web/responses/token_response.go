@@ -12,9 +12,9 @@ func newUserTokenResponse() userTokenResponse {
 	return userTokenResponse{}
 }
 
-func (this userTokenResponse) UserToken(user *models.User, token, ref string) Result {
-	return Result{
+func (this userTokenResponse) UserToken(user *models.User, token, ref string) result {
+	return result{
 		"token": token,
 		"ref":   ref,
-		"user":  UserResponse.Item(user)}
+		"user":  UserResponse.User(user)}
 }

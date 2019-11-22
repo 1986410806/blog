@@ -11,15 +11,15 @@ func newUserResponse() *userResponse {
 	return &userResponse{}
 }
 
-func (userResponse userResponse) List(users []models.User) (list Results) {
+func (userResponse userResponse) Users(users []models.User) (list results) {
 	for _, user := range users {
-		list = append(list, userResponse.Item(&user))
+		list = append(list, userResponse.User(&user))
 	}
 	return list
 }
 
-func (userResponse userResponse) Item(user *models.User) Result {
-	return Result{
+func (userResponse userResponse) User(user *models.User) result {
+	return result{
 		"ID":          user.ID,
 		"username":    user.Username.String,
 		"email":       user.Email.String,

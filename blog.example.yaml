@@ -4,9 +4,16 @@ Port: '8082' # 端口
 LogFile: /Users/zhaohuinan/Log/mlog.log # 日志文件
 ShowSql: true # 是否打印sql
 StaticPath: /Users/zhaohuinan/Log/  # 根路径下的静态文件目录，可配置绝对路径
+# jwt 签名密匙
+JwtSecret: zhh123456
 
 # 数据库配置
 MySqlUrl: root:zhh123456@tcp(localhost:3306)/blog?charset=utf8mb4&parseTime=True&loc=Local  # 数据库链接
+# redis 数据库
+Redis:
+  Host: 127.0.0.1
+  Port: 6379
+  DB: 1
 
 # github登录配置
 Github:

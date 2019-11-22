@@ -18,5 +18,10 @@ func init() {
 
 func main() {
 	// 运行应用
-	bootstrap.Run()
+	app := bootstrap.Register()
+
+	err := bootstrap.Run(app)
+	if err != nil {
+		panic(err)
+	}
 }
