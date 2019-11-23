@@ -23,7 +23,8 @@ func Register() *iris.Application {
 	database.OpenDB(config.Conf.MySqlUrl)
 	// redis 初始化
 	database.RedisInit()
-
+	// 注册中间件
+	registerMiddleware(app)
 	// 初始化日志
 	initLogrus()
 	// 初始化路由
@@ -40,7 +41,7 @@ func Run(app *iris.Application) error {
 	handleSignal(server)
 
 	err := app.Run(iris.Server(server), iris.WithConfiguration(iris.Configuration{
-		DisableStartupLog:                 false,
+		DisableStartupLog:                 true,
 		DisableInterruptHandler:           false,
 		DisablePathCorrection:             false,
 		EnablePathEscape:                  false,
@@ -66,10 +67,28 @@ func registerMiddleware(app *iris.Application) {
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"*"},
 	}))
-	//并将请求记录到终端。
-	app.Use(recover.New())
-
-	app.Use(logger.New())
+	if config.Conf.Debug == true {
+		app.Use(recover.New())
+		//
+		app.Use(logger.New(logger.Config{
+			//状态显示状态代码
+			Status: true,
+			// IP显示请求的远程地址
+			IP: true,
+			//方法显示http方法
+			Method: true,
+			// Path显示请求路径
+			Path: true,
+			// Query将url查询附加到Path。
+			Query: true,
+			//Columns：true，
+			// 如果不为空然后它的内容来自`ctx.Values(),Get("logger_message")
+			//将添加到日志中。
+			MessageContextKeys: []string{"logger_message"},
+			//如果不为空然后它的内容来自`ctx.GetHeader（“User-Agent”）
+			MessageHeaderKeys: []string{"User-Agent"},
+		}))
+	}
 }
 
 // 初始化日志

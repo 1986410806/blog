@@ -19,6 +19,10 @@ func NewUserController() *UserController {
 	}
 }
 
+/**
+ * 用户信息
+ * @return blog/app/repositories/UserResponse/User
+ */
 func (c *UserController) Get() *simple.JsonResult {
 
 	TokenClaim := jwt.GetTokenClaim(c.Ctx)

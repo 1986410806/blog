@@ -5,14 +5,14 @@ import (
 	"io/ioutil"
 )
 
-var Conf *Config
+var Conf *config
 
-type Config struct {
+type config struct {
 	Env        string `yaml:"Env"`        // 环境：prod、dev、local
 	BaseUrl    string `yaml:"BaseUrl"`    // base url
 	Port       string `yaml:"Port"`       // 端口
 	LogFile    string `yaml:"LogFile"`    // 日志文件
-	ShowSql    bool   `yaml:"ShowSql"`    // 是否显示日志
+	Debug      bool   `yaml:"Debug"`      // 是否显示日志
 	StaticPath string `yaml:"StaticPath"` // 静态文件目录
 
 	MySqlUrl string `yaml:"MySqlUrl"` // 数据库连接地址
@@ -53,7 +53,7 @@ func InitConfig(filename string) {
 		return
 	}
 
-	Conf = &Config{}
+	Conf = &config{}
 	err = yaml.Unmarshal(yamlFile, Conf)
 	if err != nil {
 		panic(err)

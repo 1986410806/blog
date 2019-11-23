@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"blog/app/models"
 	"blog/config"
 	"github.com/dgrijalva/jwt-go"
 	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
@@ -14,7 +13,7 @@ var tokenClaimsData *tokenClaims
 
 type tokenClaims struct {
 	UserId   uint
-	NickName string
+	UserName string
 }
 
 func JwtHandler() *jwtmiddleware.Middleware {
@@ -43,19 +42,19 @@ func GetTokenClaim(Ctx iris.Context) *tokenClaims {
 		claims := Ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
 		tokenClaimsData = &tokenClaims{
 			UserId:   uint(claims["id"].(float64)),
-			NickName: claims["nick_name"].(string),
+			UserName: claims["user_name"].(string),
 		}
 	}
 	return tokenClaimsData
 }
 
-func MakeToken(user *models.User) (string, error) {
+func MakeToken(uid uint, userName, email string) (string, error) {
 	//生成加密串过程
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"nick_name": user.Nickname,
-			"email":     user.Email,
-			"id":        user.ID,
+			"user_name": userName,
+			"email":     email,
+			"id":        uid,
 			"iss":       "blog-admin",
 			"iat":       time.Now().Unix(),
 			"jti":       simple.Uuid(),

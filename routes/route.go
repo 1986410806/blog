@@ -22,9 +22,14 @@ func adminRoute(api *iris.Application) {
 		context.WriteString("hello admin api")
 	})
 	// 登录相关接口
-	mvc.New(api.Party("/api/admin/v1")).Handle(adminv1.NewLoginController())
+	login := api.Party("/api/admin/v1")
+	{
+		login.Post("/login", adminv1.Login)
+		login.Post("/logout", adminv1.Logout).Use(middlewares.JwtHandler().Serve)
+	}
 	mvc.Configure(api.Party("/api/admin/v1"), func(v1 *mvc.Application) {
 		v1.Router.Use(middlewares.JwtHandler().Serve)
+		// 用户相关
 		v1.Party("/user").Handle(adminv1.NewUserController())
 	})
 }

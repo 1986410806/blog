@@ -22,7 +22,7 @@ func OpenDB(url string) {
 		return
 	}
 
-	db.LogMode(config.Conf.ShowSql)
+	db.LogMode(config.Conf.Debug)
 	db.SingularTable(true) // 禁用表名负数
 	db.DB().SetMaxIdleConns(5)
 	db.DB().SetMaxOpenConns(20)

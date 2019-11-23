@@ -13,7 +13,6 @@ func init() {
 	flag.Parse()
 
 	config.InitConfig(*configFile)
-
 }
 
 func main() {

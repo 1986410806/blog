@@ -7,6 +7,7 @@ package api_test
  * @like https://iris-go.com/start/#testing
  */
 import (
+	"blog/app/common/jwt"
 	"blog/bootstrap"
 	"blog/config"
 	"github.com/kataras/iris/v12/httptest"
@@ -14,7 +15,7 @@ import (
 )
 
 func init() {
-	config.InitConfig("../blog.yaml")
+	config.InitConfig("../../blog.yaml")
 }
 
 func TestLogin(t *testing.T) {
@@ -34,4 +35,22 @@ func TestLogin(t *testing.T) {
 		ValueEqual("errorCode", 0).
 		ValueEqual("success", true)
 
+}
+
+func TestLogout(t *testing.T) {
+	app := bootstrap.Register()
+	e := httptest.New(t, app)
+	token, err := jwt.MakeToken(1, "admin", "1986410806@qq.com")
+	if err != nil {
+		t.Error(err)
+	}
+
+	e.POST("/api/admin/v1/logout").
+		WithHeader("Authorization", "Bearer "+token).
+		Expect().
+		Status(httptest.StatusOK).
+		JSON().
+		Object().
+		ValueEqual("errorCode", 0).
+		ValueEqual("success", true)
 }
