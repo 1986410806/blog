@@ -29,7 +29,7 @@ func (userResponse userResponse) User(user *models.User) result {
 		"roles":       user.Roles,
 		"type":        user.Type,
 		"description": user.Description,
-		"CreatedAt":   user.CreatedAt.Format("2006-01-02 15:04:05"),
-		"UpdatedAt":   user.UpdatedAt.Format("2006-01-02 15:04:05"),
+		"created_at":  user.CreatedAt.Format("2006-01-02 15:04:05"),
+		"updated_at":  user.UpdatedAt.Format("2006-01-02 15:04:05"),
 	}
 }

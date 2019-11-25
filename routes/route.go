@@ -31,6 +31,8 @@ func adminRoute(api *iris.Application) {
 		v1.Router.Use(middlewares.JwtHandler().Serve)
 		// 用户相关
 		v1.Party("/user").Handle(adminv1.NewUserController())
+		// 标签
+		v1.Party("/tag").Handle(adminv1.NewTagController())
 	})
 }
 
