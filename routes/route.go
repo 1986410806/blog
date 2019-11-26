@@ -21,19 +21,24 @@ func adminRoute(api *iris.Application) {
 	api.Get("/api/admin", func(context iris.Context) {
 		context.WriteString("hello admin api")
 	})
-	// 登录相关接口
-	login := api.Party("/api/admin/v1")
+
+	v1 := api.Party("/api/admin/v1")
 	{
-		login.Post("/login", adminv1.Login)
-		login.Post("/logout", adminv1.Logout).Use(middlewares.JwtHandler().Serve)
+		// 登录相关接口
+		v1.Post("/login", adminv1.Login)
+		v1.Post("/logout", adminv1.Logout).Use(middlewares.JwtHandler().Serve)
+		mvc.New(v1.Party("/system")).Handle(adminv1.NewSystemController())
+		// 需要登录授权的
+		mvc.Configure(v1.Party("/", middlewares.JwtHandler().Serve), func(auth *mvc.Application) {
+			// 应用配置
+			auth.Party("/system/config").Handle(adminv1.NewSystemConfigController())
+			// 用户相关
+			auth.Party("/user").Handle(adminv1.NewUserController())
+			// 标签
+			auth.Party("/tag").Handle(adminv1.NewTagController())
+		})
 	}
-	mvc.Configure(api.Party("/api/admin/v1"), func(v1 *mvc.Application) {
-		v1.Router.Use(middlewares.JwtHandler().Serve)
-		// 用户相关
-		v1.Party("/user").Handle(adminv1.NewUserController())
-		// 标签
-		v1.Party("/tag").Handle(adminv1.NewTagController())
-	})
+
 }
 
 func ApiRoute(application *iris.Application) {

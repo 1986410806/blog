@@ -3,8 +3,8 @@ package v1
 import (
 	"blog/app/common/jwt"
 	"blog/app/repositories"
-	"blog/app/services"
 	"blog/app/web/responses"
+	"blog/app/web/services"
 	"fmt"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"

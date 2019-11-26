@@ -41,7 +41,7 @@ func Run(app *iris.Application) error {
 	handleSignal(server)
 
 	err := app.Run(iris.Server(server), iris.WithConfiguration(iris.Configuration{
-		DisableStartupLog:                 true,
+		DisableStartupLog:                 false,
 		DisableInterruptHandler:           false,
 		DisablePathCorrection:             false,
 		EnablePathEscape:                  false,

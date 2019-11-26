@@ -22,7 +22,7 @@ func NewTagController() *TagController {
 /**
  * 新增标签列表
  */
-func (c TagController) Post() *simple.JsonResult {
+func (c TagController) PostCreate() *simple.JsonResult {
 	var (
 		name        = c.Ctx.FormValue("name")
 		description = c.Ctx.FormValue("description")
@@ -55,7 +55,7 @@ func (c TagController) GetList() *simple.JsonResult {
 }
 
 /**
- * 编辑标签列表
+ * 编辑标签
  */
 func (c TagController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt(c.Ctx, "id")

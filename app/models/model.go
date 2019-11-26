@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var Models = []interface{}{&User{}, &UserToken{}, &Category{}, &Tag{},
+var Models = []interface{}{&User{}, &Category{}, &Tag{},
 	&Article{}, &ArticleTag{}, &Comment{},
 	&Favorite{}, &Message{}, &SysConfig{},
 	&Link{}, &ThirdAccount{},
@@ -85,14 +85,6 @@ type User struct {
 	LastLoginTime time.Time
 }
 
-type UserToken struct {
-	gorm.Model
-	Token     string `gorm:"size:32;unique;not null" json:"token" form:"token"`
-	UserId    uint   `gorm:"not null;index:idx_user_id;" json:"userId" form:"userId"`
-	ExpiredAt int64  `gorm:"not null" json:"expiredAt" form:"expiredAt"`
-	Status    int    `gorm:"not null;index:idx_status;default:0" json:"status" form:"status"`
-}
-
 type ThirdAccount struct {
 	gorm.Model
 	UserId    sql.NullInt64 `gorm:"unique_index:idx_user_id_third_type;" json:"userId" form:"userId"`                                  // 用户编号
@@ -111,13 +103,6 @@ type Category struct {
 	Status      int    `gorm:"index:idx_status;not null" json:"status" form:"status"`
 }
 
-// 标签
-type Tag struct {
-	gorm.Model
-	Name        string `gorm:"size:32;unique;not null" json:"name" form:"name"`
-	Description string `gorm:"size:1024" json:"description" form:"description"`
-	Status      int    `gorm:"index:idx_status;not null" json:"status" form:"status"`
-}
 
 // 文章
 type Article struct {
