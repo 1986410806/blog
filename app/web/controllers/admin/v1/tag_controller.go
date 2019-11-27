@@ -3,20 +3,22 @@ package v1
 import (
 	"blog/app/models"
 	"blog/app/repositories"
-	"blog/app/web/responses"
+	"blog/app/web/responses/admin"
+	"blog/database"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
 
 type TagController struct {
 	Ctx           iris.Context
-	TagRepository *repositories.TagRepositories
-	TagResponse   responses.TagResponse
+	TagRepository *repositories.TagRepository
+	TagResponse   admin.TagResponse
 }
 
 func NewTagController() *TagController {
 	return &TagController{
-		TagRepository: repositories.NewTagRepositories()}
+		TagRepository: repositories.NewTagRepository(
+			database.DB())}
 }
 
 /**

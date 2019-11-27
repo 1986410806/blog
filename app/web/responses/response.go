@@ -1,5 +1,5 @@
 package responses
 
-type results []result
+type Results []Result
 
-type result map[string]interface{}
+type Result map[string]interface{}

@@ -12,10 +12,10 @@ type SystemService struct {
 func (service SystemService) GetSystemConfigs() map[string]interface{} {
 
 	// 从数据库取出配置并格式化
-	repo := repositories.NewSystemConfigRepositories()
+	repo := repositories.NewSystemConfigRepository()
 	list, err := repo.GetConfigKv()
 
-	configs := make(map[string]interface{},len(list))
+	configs := make(map[string]interface{}, len(list))
 	if err != nil {
 		return nil
 	}

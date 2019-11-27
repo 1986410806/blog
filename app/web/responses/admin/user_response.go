@@ -1,6 +1,9 @@
-package responses
+package admin
 
-import "blog/app/models"
+import (
+	"blog/app/models"
+	"blog/app/web/responses"
+)
 
 var UserResponse = newUserResponse()
 
@@ -11,15 +14,15 @@ func newUserResponse() *userResponse {
 	return &userResponse{}
 }
 
-func (userResponse userResponse) Users(users []models.User) (list results) {
+func (userResponse userResponse) Users(users []models.User) (list responses.Results) {
 	for _, user := range users {
 		list = append(list, userResponse.User(&user))
 	}
 	return list
 }
 
-func (userResponse userResponse) User(user *models.User) result {
-	return result{
+func (userResponse userResponse) User(user *models.User) responses.Result {
+	return responses.Result{
 		"ID":          user.ID,
 		"username":    user.Username.String,
 		"email":       user.Email.String,

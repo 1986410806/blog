@@ -1,19 +1,22 @@
-package responses
+package admin
 
-import "blog/app/models"
+import (
+	"blog/app/models"
+	"blog/app/web/responses"
+)
 
 type SystemConfigResponse struct {
 }
 
-func (r SystemConfigResponse) List(models []models.SysConfig) (list results) {
+func (r SystemConfigResponse) List(models []models.SysConfig) (list responses.Results) {
 	for _, model := range models {
 		list = append(list, r.Item(&model))
 	}
 	return list
 }
 
-func (r SystemConfigResponse) Item(model *models.SysConfig) result {
-	return result{
+func (r SystemConfigResponse) Item(model *models.SysConfig) responses.Result {
+	return responses.Result{
 		"id":          model.ID,
 		"key":         model.Key,
 		"value":       model.Value,

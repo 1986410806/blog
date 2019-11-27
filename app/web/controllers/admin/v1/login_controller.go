@@ -3,7 +3,7 @@ package v1
 import (
 	"blog/app/common/jwt"
 	"blog/app/repositories"
-	"blog/app/web/responses"
+	"blog/app/web/responses/admin"
 	"blog/app/web/services"
 	"fmt"
 	"github.com/kataras/iris/v12"
@@ -34,7 +34,7 @@ func Login(ctx iris.Context) {
 	logrus.Info(fmt.Sprintf("用户[%s]登录了管理后台;id[%d]", user.Username.String, user.ID))
 	ctx.JSON(
 		simple.JsonData(
-			responses.UserTokenResponse.UserToken(
+			admin.UserTokenResponse.UserToken(
 				user, token, ref)))
 }
 

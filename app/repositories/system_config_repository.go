@@ -8,24 +8,24 @@ import (
 	"time"
 )
 
-type SystemConfigRepositories struct {
+type SystemConfigRepository struct {
 	db *gorm.DB
 }
 
-func NewSystemConfigRepositories() *SystemConfigRepositories {
-	return &SystemConfigRepositories{
+func NewSystemConfigRepository() *SystemConfigRepository {
+	return &SystemConfigRepository{
 		db: database.DB(),
 	}
 }
 
 // 获取配置列表
-func (this *SystemConfigRepositories) ConfigList() (list []models.SysConfig, err error) {
+func (this *SystemConfigRepository) ConfigList() (list []models.SysConfig, err error) {
 	err = this.db.Find(&list).Error
 	return list, err
 }
 
 // 创建配置
-func (this *SystemConfigRepositories) Create(model *models.SysConfig) (*models.SysConfig, error) {
+func (this *SystemConfigRepository) Create(model *models.SysConfig) (*models.SysConfig, error) {
 	if tmp := this.GetByKey(model.Key); tmp.Key == model.Key {
 		return tmp, nil
 	}
@@ -34,7 +34,7 @@ func (this *SystemConfigRepositories) Create(model *models.SysConfig) (*models.S
 }
 
 // 编辑配置
-func (this *SystemConfigRepositories) UpdateById(id int, data UpdateData) (*models.SysConfig, error) {
+func (this *SystemConfigRepository) UpdateById(id int, data UpdateData) (*models.SysConfig, error) {
 	model, err := this.GetById(id)
 	if err != nil {
 		return nil, errors.New("配置不存在")
@@ -48,7 +48,7 @@ func (this *SystemConfigRepositories) UpdateById(id int, data UpdateData) (*mode
 }
 
 // 使用 model 编辑配置
-func (this *SystemConfigRepositories) UpdateByModel(model *models.SysConfig, data UpdateData) error {
+func (this *SystemConfigRepository) UpdateByModel(model *models.SysConfig, data UpdateData) error {
 	db := this.db.Model(&model).Updates(data)
 	// 判断影响的行数
 	if db.RowsAffected > 0 {
@@ -58,7 +58,7 @@ func (this *SystemConfigRepositories) UpdateByModel(model *models.SysConfig, dat
 }
 
 // 使用id 删除配置
-func (this *SystemConfigRepositories) DelById(id int) (err error) {
+func (this *SystemConfigRepository) DelById(id int) (err error) {
 	model, err := this.GetById(id)
 	if err != nil {
 		return errors.New("配置不存在")
@@ -70,21 +70,21 @@ func (this *SystemConfigRepositories) DelById(id int) (err error) {
 }
 
 // 按id查找
-func (this *SystemConfigRepositories) GetById(id int) (*models.SysConfig, error) {
+func (this *SystemConfigRepository) GetById(id int) (*models.SysConfig, error) {
 	var model = &models.SysConfig{}
 	err := this.db.First(model, id).Error
 	return model, err
 }
 
 // 按 key 查找
-func (this *SystemConfigRepositories) GetByKey(name string) (*models.SysConfig) {
+func (this *SystemConfigRepository) GetByKey(name string) *models.SysConfig {
 	var model = &models.SysConfig{}
 	this.db.Where("`key` = ?", name).First(model)
 	return model
 }
 
 // 单独获取 key value 字端
-func (this *SystemConfigRepositories) GetConfigKv() (list []models.SysConfig, err error) {
+func (this *SystemConfigRepository) GetConfigKv() (list []models.SysConfig, err error) {
 	err = this.db.Select([]string{"`key`", "`value`"}).Find(&list).Error
 	return list, err
 }

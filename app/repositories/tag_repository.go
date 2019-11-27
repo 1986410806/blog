@@ -2,30 +2,28 @@ package repositories
 
 import (
 	"blog/app/models"
-	"blog/database"
 	"errors"
 	"github.com/jinzhu/gorm"
 	"time"
 )
 
-type TagRepositories struct {
+type TagRepository struct {
 	db *gorm.DB
 }
 
-func NewTagRepositories() *TagRepositories {
-	return &TagRepositories{
-		db: database.DB(),
-	}
+func NewTagRepository(db *gorm.DB) *TagRepository {
+	return &TagRepository{
+		db: db}
 }
 
 // 获取标签列表
-func (this *TagRepositories) TagList() (list []models.Tag, err error) {
+func (this *TagRepository) TagList() (list []models.Tag, err error) {
 	err = this.db.Find(&list).Error
 	return list, err
 }
 
 // 创建标签
-func (this *TagRepositories) Create(tag *models.Tag) (*models.Tag, error) {
+func (this *TagRepository) Create(tag *models.Tag) (*models.Tag, error) {
 
 	if tmp := this.GetByName(tag.Name); tmp.Name == tag.Name {
 		return tmp, nil
@@ -35,7 +33,7 @@ func (this *TagRepositories) Create(tag *models.Tag) (*models.Tag, error) {
 }
 
 // 编辑标签
-func (this *TagRepositories) UpdateById(id int, data UpdateData) (*models.Tag, error) {
+func (this *TagRepository) UpdateById(id int, data UpdateData) (*models.Tag, error) {
 	var tag, err = this.GetById(id)
 	if err != nil {
 		return nil, errors.New("标签不存在")
@@ -45,13 +43,13 @@ func (this *TagRepositories) UpdateById(id int, data UpdateData) (*models.Tag, e
 }
 
 // 使用 model 编辑标签
-func (this *TagRepositories) UpdateByModel(tag *models.Tag, data UpdateData) (err error) {
+func (this *TagRepository) UpdateByModel(tag *models.Tag, data UpdateData) (err error) {
 	err = this.db.Model(&tag).Updates(data).Error
 	return err
 }
 
 // 使用id 删除标签
-func (this *TagRepositories) DelById(id int) error {
+func (this *TagRepository) DelById(id int) error {
 	var tag, err = this.GetById(id)
 	if err != nil {
 		return errors.New("标签不存在")
@@ -65,15 +63,36 @@ func (this *TagRepositories) DelById(id int) error {
 }
 
 // 按id查找
-func (this *TagRepositories) GetById(id int) (*models.Tag, error) {
+func (this *TagRepository) GetById(id int) (*models.Tag, error) {
 	var tag = &models.Tag{}
 	e := this.db.First(tag, uint(id)).Error
 	return tag, e
 }
 
 // 按 name 查找
-func (this *TagRepositories) GetByName(name string) (*models.Tag) {
+func (this *TagRepository) GetByName(name string) *models.Tag {
 	var tag = &models.Tag{}
 	this.db.Where("name = ?", name).First(tag)
 	return tag
+}
+
+// 批量创建
+func (this *TagRepository) BatchCreate(tags []string) (ids []uint) {
+	ids = make([]uint, len(tags))
+	if len(tags) < 1 {
+		return ids
+	}
+
+	for _, tagName := range tags {
+		tagModel := &models.Tag{
+			Name:   tagName,
+			Status: models.ArticleTagStatusOk,
+		}
+		tag, err := this.Create(tagModel)
+
+		if err == nil {
+			ids = append(ids, tag.ID)
+		}
+	}
+	return ids
 }

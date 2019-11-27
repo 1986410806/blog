@@ -1,20 +1,22 @@
-package responses
+package admin
 
-import "blog/app/models"
-
+import (
+	"blog/app/models"
+	"blog/app/web/responses"
+)
 
 type TagResponse struct {
 }
 
-func (r TagResponse) Tags(tags []models.Tag) (list results) {
+func (r TagResponse) Tags(tags []models.Tag) (list responses.Results) {
 	for _, tag := range tags {
 		list = append(list, r.Tag(&tag))
 	}
 	return list
 }
 
-func (r TagResponse) Tag(model *models.Tag) result {
-	return result{
+func (r TagResponse) Tag(model *models.Tag) responses.Result {
+	return responses.Result{
 		"id":          model.ID,
 		"name":        model.Name,
 		"description": model.Description,

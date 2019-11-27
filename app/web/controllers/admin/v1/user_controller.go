@@ -3,7 +3,7 @@ package v1
 import (
 	"blog/app/common/jwt"
 	"blog/app/repositories"
-	"blog/app/web/responses"
+	"blog/app/web/responses/admin"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
@@ -21,7 +21,7 @@ func NewUserController() *UserController {
 
 /**
  * 用户信息
- * @return blog/app/repositories/UserResponse/User
+ * @return blog/app/Repository/UserResponse/User
  */
 func (c *UserController) Get() *simple.JsonResult {
 
@@ -29,7 +29,7 @@ func (c *UserController) Get() *simple.JsonResult {
 
 	user := c.UserRepository.GetById(TokenClaim.UserId)
 
-	return simple.JsonData(responses.UserResponse.User(user))
+	return simple.JsonData(admin.UserResponse.User(user))
 }
 
 /***
@@ -43,5 +43,5 @@ func (c *UserController) GetList() *simple.JsonResult {
 
 	user := c.UserRepository.GetById(TokenClaim.UserId)
 
-	return simple.JsonData(responses.UserResponse.User(user))
+	return simple.JsonData(admin.UserResponse.User(user))
 }

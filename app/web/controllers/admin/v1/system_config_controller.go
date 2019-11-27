@@ -3,22 +3,22 @@ package v1
 import (
 	"blog/app/models"
 	"blog/app/repositories"
-	"blog/app/web/responses"
+	"blog/app/web/responses/admin"
 	"blog/app/web/services"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
 
 type SystemConfigController struct {
-	Ctx                      iris.Context
-	SystemConfigRepositories *repositories.SystemConfigRepositories
-	SystemService            services.SystemService
-	SystemConfigResponse     responses.SystemConfigResponse
+	Ctx                    iris.Context
+	SystemConfigRepository *repositories.SystemConfigRepository
+	SystemService          services.SystemService
+	SystemConfigResponse   admin.SystemConfigResponse
 }
 
 func NewSystemConfigController() *SystemConfigController {
 	return &SystemConfigController{
-		SystemConfigRepositories: repositories.NewSystemConfigRepositories(),
+		SystemConfigRepository: repositories.NewSystemConfigRepository(),
 	}
 }
 
@@ -36,7 +36,7 @@ func (this *SystemConfigController) GetConfig() *simple.JsonResult {
  * @return json []models.SysConfig{}
  */
 func (c *SystemConfigController) GetList() *simple.JsonResult {
-	list, err := c.SystemConfigRepositories.ConfigList()
+	list, err := c.SystemConfigRepository.ConfigList()
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -58,7 +58,7 @@ func (c *SystemConfigController) PostCreate() *simple.JsonResult {
 	if name == "" {
 		return simple.JsonErrorMsg("参数不能为空")
 	}
-	page, err := c.SystemConfigRepositories.Create(&models.SysConfig{
+	page, err := c.SystemConfigRepository.Create(&models.SysConfig{
 		Key:         key,
 		Value:       value,
 		Name:        name,
@@ -84,7 +84,7 @@ func (c *SystemConfigController) PostUpdate() *simple.JsonResult {
 		"name":        c.Ctx.FormValue("name"),
 		"description": c.Ctx.FormValue("description"),
 	}
-	page, err := c.SystemConfigRepositories.UpdateById(id, data)
+	page, err := c.SystemConfigRepository.UpdateById(id, data)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
@@ -101,7 +101,7 @@ func (c *SystemConfigController) PostDel() *simple.JsonResult {
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	err = c.SystemConfigRepositories.DelById(id)
+	err = c.SystemConfigRepository.DelById(id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
