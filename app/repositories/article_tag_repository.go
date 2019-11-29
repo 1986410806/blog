@@ -34,12 +34,25 @@ func (this *ArticleTagRepository) UpdateByModel(tag *models.ArticleTag, data Upd
 }
 
 // 批量插入
-func (this *ArticleTagRepository) BatchCreate(c uint, tagIds []uint) {
+func (this *ArticleTagRepository) BatchCreate(articleId uint, tagIds []uint) error {
+	if len(tagIds) < 1 {
+		return nil
+	}
 	for _, tagId := range tagIds {
-		this.Create(&models.ArticleTag{
-			ArticleId: int64(tagId),
+		_, err := this.Create(&models.ArticleTag{
+			ArticleId: int64(articleId),
 			TagId:     int64(tagId),
 			Status:    models.ArticleTagStatusOk,
 		})
+		if err != nil {
+			return err
+		}
 	}
+	return nil
+}
+
+// 删除文章下标签
+func (this *ArticleTagRepository) ArticleTagDel(articleId uint) error {
+	err := this.db.Where("article_id = ?", articleId).Delete(models.ArticleTag{}).Error
+	return err
 }

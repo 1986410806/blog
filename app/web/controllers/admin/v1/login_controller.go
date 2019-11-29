@@ -25,7 +25,7 @@ func Login(ctx iris.Context) {
 	if err != nil {
 		ctx.JSON(simple.JsonErrorMsg(err.Error()))
 	}
-	token, err := jwt.MakeToken(user.ID, user.Username.String, user.Email.String)
+	token, err := jwt.MakeToken(user.ID, user.Username.String, user.Email.String, user.Roles)
 	if err != nil {
 		ctx.JSON(simple.JsonErrorMsg(err.Error()))
 	}
@@ -39,7 +39,7 @@ func Login(ctx iris.Context) {
 }
 
 func Logout(ctx iris.Context) {
-	var token = jwt.GetTokenClaim(ctx)
+	var token = jwt.GetTokenClaim()
 	logrus.Info(fmt.Sprintf("用户[%s]退出登录;id[%d]", token.UserName, token.UserId))
 	ctx.JSON(
 		simple.JsonData("res:ok"))

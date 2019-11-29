@@ -24,10 +24,9 @@ func NewUserController() *UserController {
  * @return blog/app/Repository/UserResponse/User
  */
 func (c *UserController) Get() *simple.JsonResult {
+	tokenClaim := jwt.GetTokenClaim()
 
-	TokenClaim := jwt.GetTokenClaim(c.Ctx)
-
-	user := c.UserRepository.GetById(TokenClaim.UserId)
+	user := c.UserRepository.GetById(tokenClaim.UserId)
 
 	return simple.JsonData(admin.UserResponse.User(user))
 }
@@ -39,7 +38,7 @@ func (c *UserController) Get() *simple.JsonResult {
  */
 func (c *UserController) GetList() *simple.JsonResult {
 
-	TokenClaim := jwt.GetTokenClaim(c.Ctx)
+	TokenClaim := jwt.GetTokenClaim()
 
 	user := c.UserRepository.GetById(TokenClaim.UserId)
 

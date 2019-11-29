@@ -4,7 +4,7 @@ import (
 	"blog/config"
 	"github.com/dgrijalva/jwt-go"
 	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
-	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/context"
 	"github.com/mlogclub/simple"
 	"time"
 )
@@ -14,10 +14,11 @@ var tokenClaimsData *tokenClaims
 type tokenClaims struct {
 	UserId   uint
 	UserName string
+	Rule     string
 }
 
-func JwtHandler() *jwtmiddleware.Middleware {
-	return jwtmiddleware.New(jwtmiddleware.Config{
+func JwtHandler(ctx context.Context) {
+	var m = jwtmiddleware.New(jwtmiddleware.Config{
 		// 这个方法将验证jwt的token
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
 			return []byte(config.Conf.JwtSecret), nil
@@ -28,31 +29,42 @@ func JwtHandler() *jwtmiddleware.Middleware {
 		//加密的方式
 		SigningMethod: jwt.SigningMethodHS256,
 		//验证未通过错误处理方式
-		ErrorHandler: func(ctx iris.Context, err error) {
-			println(err.Error())
+		ErrorHandler: func(ctx context.Context, err error) {
 			ctx.JSON(simple.JsonErrorMsg(err.Error()))
 		},
 		Expiration: true,
 	})
 
+	// 验证 jwt
+	if err := m.CheckJWT(ctx); err != nil {
+		m.Config.ErrorHandler(ctx, err)
+		return
+	}
+
+	initTokenClaim(ctx)
+	// If everything ok then call next.
+	ctx.Next()
 }
 
-func GetTokenClaim(Ctx iris.Context) *tokenClaims {
-	if tokenClaimsData == nil {
-		claims := Ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
-		tokenClaimsData = &tokenClaims{
-			UserId:   uint(claims["id"].(float64)),
-			UserName: claims["user_name"].(string),
-		}
-	}
+func GetTokenClaim() *tokenClaims {
 	return tokenClaimsData
 }
 
-func MakeToken(uid uint, userName, email string) (string, error) {
+func initTokenClaim(ctx context.Context) {
+	claims := ctx.Values().Get("jwt").(*jwt.Token).Claims.(jwt.MapClaims)
+	tokenClaimsData = &tokenClaims{
+		UserId:   uint(claims["id"].(float64)),
+		UserName: claims["user_name"].(string),
+		Rule:     claims["rule"].(string),
+	}
+}
+
+func MakeToken(uid uint, userName, email string, rule string) (string, error) {
 	//生成加密串过程
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"user_name": userName,
+			"rule":      rule,
 			"email":     email,
 			"id":        uid,
 			"iss":       "blog-admin",

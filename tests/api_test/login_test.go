@@ -27,7 +27,7 @@ func TestLogin(t *testing.T) {
 		"password": "123456",
 		"ref":      "aaa",
 	}
-	e.POST("/api/admin/v1/login").
+	e.POST("/admin/v1/login").
 		WithForm(loginData).Expect().
 		Status(httptest.StatusOK).
 		JSON().
@@ -40,12 +40,12 @@ func TestLogin(t *testing.T) {
 func TestLogout(t *testing.T) {
 	app := bootstrap.Register()
 	e := httptest.New(t, app)
-	token, err := jwt.MakeToken(1, "admin", "1986410806@qq.com")
+	token, err := jwt.MakeToken(1, "admin", "1986410806@qq.com", "管理员")
 	if err != nil {
 		t.Error(err)
 	}
 
-	e.POST("/api/admin/v1/logout").
+	e.POST("/admin/v1/logout").
 		WithHeader("Authorization", "Bearer "+token).
 		Expect().
 		Status(httptest.StatusOK).

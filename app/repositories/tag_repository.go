@@ -78,11 +78,9 @@ func (this *TagRepository) GetByName(name string) *models.Tag {
 
 // 批量创建
 func (this *TagRepository) BatchCreate(tags []string) (ids []uint) {
-	ids = make([]uint, len(tags))
 	if len(tags) < 1 {
 		return ids
 	}
-
 	for _, tagName := range tags {
 		tagModel := &models.Tag{
 			Name:   tagName,

@@ -4,6 +4,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+const (
+	TagStatusOk       = 0
+	TagStatusDisabled = 1
+)
+
 // 标签
 type Tag struct {
 	gorm.Model

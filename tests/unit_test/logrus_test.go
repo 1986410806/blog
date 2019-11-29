@@ -9,8 +9,8 @@ import (
 
 func init() {
 	config.InitConfig("../../blog.yaml")
+	bootstrap.Register()
 }
 func TestLogrus(t *testing.T) {
-	bootstrap.Register()
 	logrus.Info("hello")
 }

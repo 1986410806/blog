@@ -17,7 +17,7 @@ func init() {
 func TestSystemConfigCurd(t *testing.T) {
 	app := bootstrap.Register()
 	test := httptest.New(t, app)
-	token, err := jwt.MakeToken(1, "admin", "1986410806@qq.com")
+	token, err := jwt.MakeToken(1, "admin", "1986410806@qq.com", "管理员")
 	if err != nil {
 		t.Error(err)
 	}
@@ -28,24 +28,24 @@ func TestSystemConfigCurd(t *testing.T) {
 		"description": "测试",
 	}
 	// 新增
-	test.POST("/api/admin/v1/system/config/create").
+	test.POST("/admin/v1/system/config/create").
 		WithHeader("Authorization", "Bearer "+token).WithForm(data).
 		Expect().Status(httptest.StatusOK).
 		JSON().Object().
 		ValueEqual("errorCode", 0).
 		ValueEqual("success", true)
 	// 列表
-	out := repositories.NewSystemConfigRepositories().GetByKey(data["key"].(string))
+	out := repositories.NewSystemConfigRepository().GetByKey(data["key"].(string))
 
-	data["description"] = "测试更新";
-	test.GET("/api/admin/v1/system/config/list").
+	data["description"] = "测试更新"
+	test.GET("/admin/v1/system/config/list").
 		WithHeader("Authorization", "Bearer "+token).
 		Expect().Status(httptest.StatusOK).
 		JSON().Object().
 		ValueEqual("errorCode", 0).
 		ValueEqual("success", true)
 	// 更新
-	test.POST("/api/admin/v1/system/config/update").
+	test.POST("/admin/v1/system/config/update").
 		WithHeader("Authorization", "Bearer "+token).
 		WithForm(data).
 		WithFormField("id", out.ID).
@@ -54,7 +54,7 @@ func TestSystemConfigCurd(t *testing.T) {
 		ValueEqual("errorCode", 0).
 		ValueEqual("success", true)
 	// 删除
-	test.POST("/api/admin/v1/system/config/del").
+	test.POST("/admin/v1/system/config/del").
 		WithHeader("Authorization", "Bearer "+token).
 		WithFormField("id", out.ID).
 		Expect().Status(httptest.StatusOK).
@@ -67,7 +67,7 @@ func TestSystemConfigCurd(t *testing.T) {
 func TestConfig(t *testing.T) {
 	app := bootstrap.Register()
 	test := httptest.New(t, app)
-	test.GET("/api/admin/v1/system/config").
+	test.GET("/admin/v1/system/config").
 		Expect().Status(httptest.StatusOK).
 		JSON().Object().
 		ValueEqual("errorCode", 0).

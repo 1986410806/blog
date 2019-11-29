@@ -7,9 +7,6 @@ const (
 	ArticleStatusDeleted   = 1 // 已删除
 	ArticleStatusDraft     = 2 // 草稿
 
-	ArticleTagStatusOk      = 0
-	ArticleTagStatusDeleted = 1
-
 	TopicStatusOk      = 0
 	TopicStatusDeleted = 1
 
@@ -32,4 +29,8 @@ type Article struct {
 	Status      int    `gorm:"int;not null" json:"status" form:"status"`                           // 状态
 	Share       bool   `gorm:"not null" json:"share" form:"share"`                                 // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                        // 原文链接
+	// 关联
+	User       User     `gorm:"foreignkey:UserId"`
+	Category   Category `gorm:"foreignkey:CategoryId"`
+	ArticleTag []ArticleTag
 }
