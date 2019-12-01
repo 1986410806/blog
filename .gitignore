@@ -20,3 +20,5 @@ go.sum
 .git/
 # ide 配置文件
 .idea
+# 日志文件
+storage/logs/

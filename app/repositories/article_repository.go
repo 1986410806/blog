@@ -24,8 +24,15 @@ func NewArticleRepository(db *gorm.DB) *ArticleRepository {
 
 // 获取文章列表
 func (this *ArticleRepository) List() (list []models.Article, err error) {
-	err = this.db.Find(&list).Error
-	return list, err
+	db := this.db.Preload("Category").
+		Preload("User").
+		Preload("ArticleTag").
+		Preload("ArticleTag.Tag").
+		Find(&list)
+	if db.RecordNotFound() {
+		return list, nil
+	}
+	return list, db.Error
 }
 
 // 创建文章

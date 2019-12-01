@@ -4,7 +4,7 @@ import "github.com/jinzhu/gorm"
 
 const (
 	ArticleStatusPublished = 0 // 已发布
-	ArticleStatusDeleted   = 1 // 已删除
+	ArticleStatusLower     = 1 // 已下架
 	ArticleStatusDraft     = 2 // 草稿
 
 	TopicStatusOk      = 0
@@ -30,7 +30,7 @@ type Article struct {
 	Share       bool   `gorm:"not null" json:"share" form:"share"`                                 // 是否是分享的文章，如果是这里只会显示文章摘要，原文需要跳往原链接查看
 	SourceUrl   string `gorm:"type:text" json:"sourceUrl" form:"sourceUrl"`                        // 原文链接
 	// 关联
-	User       User     `gorm:"foreignkey:UserId"`
-	Category   Category `gorm:"foreignkey:CategoryId"`
-	ArticleTag []ArticleTag
+	User       *User     `gorm:"foreignkey:UserId"`
+	Category   *Category `gorm:"foreignkey:CategoryId"`
+	ArticleTag []*ArticleTag
 }

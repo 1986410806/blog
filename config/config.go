@@ -36,14 +36,14 @@ type config struct {
 		AppKey string `yaml:"AppKey"`
 	} `yaml:"QQConnect"`
 
-	// 阿里云oss配置
-	AliyunOss struct {
-		Host         string `yaml:"Host"`
-		Bucket       string `yaml:"Bucket"`
-		Endpoint     string `yaml:"Endpoint"`
-		AccessId     string `yaml:"AccessId"`
-		AccessSecret string `yaml:"AccessSecret"`
-	} `yaml:"AliyunOss"`
+	// 七牛云oss配置
+	QiniuOss struct {
+		Host      string `yaml:"Host"`
+		Bucket    string `yaml:"Bucket"`
+		Endpoint  string `yaml:"Endpoint"`
+		AccessKey string `yaml:"AccessKey"`
+		SecretKey string `yaml:"SecretKey"`
+	} `yaml:"QiniuOss"`
 }
 
 func InitConfig(filename string) {

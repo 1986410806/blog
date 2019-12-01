@@ -69,7 +69,12 @@ func (this ArticleController) PostCreate() *simple.JsonResult {
  * 获取文章列表
  */
 func (c ArticleController) GetList() *simple.JsonResult {
-	return simple.JsonData("")
+	list, err := c.ArticleRepository.List()
+	if err != nil {
+		return simple.JsonErrorMsg(err.Error())
+	}
+	return simple.JsonData(
+		c.ArticleResponse.List(list))
 }
 
 /**
