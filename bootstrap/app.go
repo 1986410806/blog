@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"blog/app/web/middlewares"
 	"blog/config"
 	"blog/database"
 	"blog/routes"
@@ -67,6 +68,9 @@ func registerMiddleware(app *iris.Application) {
 		AllowCredentials: true,
 		AllowedHeaders:   []string{"*"},
 	}))
+	// apidoc
+	app.Use(middlewares.ApiDocHandler())
+
 	if config.Conf.Debug == true {
 		app.Use(recover.New())
 		//

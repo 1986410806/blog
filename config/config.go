@@ -15,6 +15,12 @@ type config struct {
 	Debug      bool   `yaml:"Debug"`      // 是否显示日志
 	StaticPath string `yaml:"StaticPath"` // 静态文件目录
 
+	ApiDoc struct {
+		Path    string `yaml:"Path"`    // api 文档地址
+		ProdUrl string `yaml:"ProdUrl"` // 生产环境 域名
+		DevUrl  string `yaml:"DevUrl"`  // 测试环境 域名
+	} `yaml:"ApiDoc"`
+
 	MySqlUrl string `yaml:"MySqlUrl"` // 数据库连接地址
 
 	Redis struct {

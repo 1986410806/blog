@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title> API Documentation </title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>   
+    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .hidden {
+            display:none;
+        }
+        pre {
+            outline: 1px solid #ccc;
+            padding: 5px; margin: 5px;
+        }
+
+        .string { color: green; }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: red; }
+
+    </style>
+    <style type="text/css">
+        pre.prettyprint {
+            border: 1px solid #ccc;
+            margin-bottom: 0;
+            padding: 9.5px;
+        }
+    </style>
+    <script>
+         
+        function syntaxHighlight(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        function spaceJson(json){
+            var validJson = JSON.parse(json);
+            return JSON.stringify(validJson, undefined, 4);
+        }
+    </script>
+
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Iris</a>
+            <p class="navbar-text">Developed by Gophers at <a href="http://betacraft.co">Betacraft</a></p>
+        </div>
+            
+        
+    </div>
+    
+</nav>
+<div class="container-fluid" style="margin-top: 70px;margin-bottom: 20px;">
+    <div class="container-fluid">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+              <div class="panel-heading">Base Urls</div>
+              <div class="panel-body">
+                
+                    <p>Production : <strong>http://127.0.0.1:8082</strong></p>
+                
+                    <p>Staging : <strong>http://zhh-blog.cn</strong></p>
+                
+              </div>
+            </div>    
+        <ul class="nav nav-pills nav-stacked" role="tablist">
+            
+                <li role="presentation"><a href="#0top" role="tab" data-toggle="tab">POST : /admin/v1/article/create</a></li>
+            
+                <li role="presentation"><a href="#1top" role="tab" data-toggle="tab">POST : /admin/v1/article/update</a></li>
+            
+                <li role="presentation"><a href="#2top" role="tab" data-toggle="tab">GET : /admin/v1/article/list</a></li>
+            
+                <li role="presentation"><a href="#3top" role="tab" data-toggle="tab">POST : /admin/v1/system/config/create</a></li>
+            
+                <li role="presentation"><a href="#4top" role="tab" data-toggle="tab">GET : /admin/v1/system/config/list</a></li>
+            
+                <li role="presentation"><a href="#5top" role="tab" data-toggle="tab">POST : /admin/v1/system/config/update</a></li>
+            
+                <li role="presentation"><a href="#6top" role="tab" data-toggle="tab">POST : /admin/v1/system/config/del</a></li>
+            
+                <li role="presentation"><a href="#7top" role="tab" data-toggle="tab">GET : /admin/v1/system/config</a></li>
+            
+                <li role="presentation"><a href="#8top" role="tab" data-toggle="tab">POST : /admin/v1/tag/create</a></li>
+            
+                <li role="presentation"><a href="#9top" role="tab" data-toggle="tab">GET : /admin/v1/tag/list</a></li>
+            
+                <li role="presentation"><a href="#10top" role="tab" data-toggle="tab">POST : /admin/v1/tag/update</a></li>
+            
+                <li role="presentation"><a href="#11top" role="tab" data-toggle="tab">POST : /admin/v1/tag/del</a></li>
+            
+                <li role="presentation"><a href="#12top" role="tab" data-toggle="tab">POST : /admin/v1/login</a></li>
+            
+                <li role="presentation"><a href="#13top" role="tab" data-toggle="tab">POST : /admin/v1/logout</a></li>
+            
+        <ul>
+    </div>
+    <div class="col-md-8 tab-content">
+        
+        <div id="0top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiMDE5NzVmMTY1OWY2NDlhNmEzMGVmMzdkYzA5Zjk3NjMiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.aY4AdAsW53mZeYjjpaYfoQKohqw-oAi2od9qRj9kSRs</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>category_id</td>
+                        <td> 1</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>content</td>
+                        <td> %E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>summary</td>
+                        <td> %E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>tags</td>
+                        <td> %E6%B5%8B%E8%AF%95%2Cceshi</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>title</td>
+                        <td> %E6%B5%8B%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-0-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+  &#34;content_type&#34;: &#34;markdown&#34;,
+  &#34;id&#34;: 11,
+  &#34;status&#34;: 2,
+  &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+  &#34;title&#34;: &#34;测试发布文章&#34;
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n  \"content_type\": \"markdown\",\n  \"id\": 11,\n  \"status\": 2,\n  \"summary\": \"这是一个测试文章\",\n  \"title\": \"测试发布文章\"\n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-0-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="1top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiMWI5OTZmMmZiNjRjNDZiODk5M2E2OThmZjVhNTMyYmEiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.5O7w2kHVu1jU8JgF9qUDW5y3hfZxGFX_0clO3oMnm-s</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>article_id</td>
+                        <td> 1</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>category_id</td>
+                        <td> 1</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>content</td>
+                        <td> %E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>summary</td>
+                        <td> %E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A02</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>tags</td>
+                        <td> %E6%B5%8B%E8%AF%95%2Cceshi%2Chahah</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>title</td>
+                        <td> %E6%B5%8B%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A01</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-1-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+  &#34;content_type&#34;: &#34;markdown&#34;,
+  &#34;id&#34;: 1,
+  &#34;status&#34;: 2,
+  &#34;summary&#34;: &#34;这是一个测试文章2&#34;,
+  &#34;title&#34;: &#34;测试发布文章1&#34;
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n  \"content_type\": \"markdown\",\n  \"id\": 1,\n  \"status\": 2,\n  \"summary\": \"这是一个测试文章2\",\n  \"title\": \"测试发布文章1\"\n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-1-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="2top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiM2RlZTE4YzY2ZGQ4NDRiMWJiNWM5MDUxYWIyOWYyNmYiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.Jc5dHZGJXWZNOpSSJc-kjarzUREfMca0b-jepRK37Ow</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-2-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: [
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 1,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章2&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-12-01 16:37:17&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 5,
+  &#34;name&#34;: &#34;hahah&#34;,
+  &#34;updated_at&#34;: &#34;2019-12-01 16:37:17&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章1&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 2,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 3,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 4,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 5,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 6,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 7,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 8,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 9,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 10,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  },
+  {
+   &#34;category&#34;: {
+ &#34;created_at&#34;: &#34;2019-11-29T11:30:05&#43;08:00&#34;,
+ &#34;description&#34;: &#34;技术类文章&#34;,
+ &#34;id&#34;: 1,
+ &#34;name&#34;: &#34;技术文章&#34;,
+ &#34;updated_at&#34;: &#34;2019-11-29T11:30:10&#43;08:00&#34;
+},
+   &#34;content&#34;: &#34;这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章&#34;,
+   &#34;content_type&#34;: &#34;markdown&#34;,
+   &#34;id&#34;: 11,
+   &#34;status&#34;: 2,
+   &#34;summary&#34;: &#34;这是一个测试文章&#34;,
+   &#34;tag&#34;: [
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 1,
+  &#34;name&#34;: &#34;测试&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ },
+ {
+  &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+  &#34;description&#34;: &#34;&#34;,
+  &#34;id&#34;: 2,
+  &#34;name&#34;: &#34;ceshi&#34;,
+  &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+ }
+],
+   &#34;title&#34;: &#34;测试发布文章&#34;
+  }
+ ],
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": [\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 1,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章2\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-12-01 16:37:17\",\n  \"description\": \"\",\n  \"id\": 5,\n  \"name\": \"hahah\",\n  \"updated_at\": \"2019-12-01 16:37:17\"\n }\n],\n   \"title\": \"测试发布文章1\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 2,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 3,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 4,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 5,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 6,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 7,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 8,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 9,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 10,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  },\n  {\n   \"category\": {\n \"created_at\": \"2019-11-29T11:30:05+08:00\",\n \"description\": \"技术类文章\",\n \"id\": 1,\n \"name\": \"技术文章\",\n \"updated_at\": \"2019-11-29T11:30:10+08:00\"\n},\n   \"content\": \"这是一个测试文章这是一个测试文章这是一个测试文章这是一个测试文章\",\n   \"content_type\": \"markdown\",\n   \"id\": 11,\n   \"status\": 2,\n   \"summary\": \"这是一个测试文章\",\n   \"tag\": [\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 1,\n  \"name\": \"测试\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n },\n {\n  \"created_at\": \"2019-11-29 14:20:07\",\n  \"description\": \"\",\n  \"id\": 2,\n  \"name\": \"ceshi\",\n  \"updated_at\": \"2019-11-29 14:20:07\"\n }\n],\n   \"title\": \"测试发布文章\"\n  }\n ],\n \"success\": true\n}\n");
+                            document.getElementById('response-body-2-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="3top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiM2JmNDAxMTgyZTZiNGRhMzlkN2NmOGJmMWI2N2RlMTMiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.0DFfao3fLN5J_6n2mLWf99n-B5nvnvwxYaB8zo-L1lY</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>description</td>
+                        <td> %E6%B5%8B%E8%AF%95</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>key</td>
+                        <td> test</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>name</td>
+                        <td> %E6%B5%8B%E8%AF%95key</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>value</td>
+                        <td> test</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-3-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  &#34;created_at&#34;: &#34;2019-12-08 13:59:07&#34;,
+  &#34;description&#34;: &#34;测试&#34;,
+  &#34;id&#34;: 11,
+  &#34;key&#34;: &#34;test&#34;,
+  &#34;name&#34;: &#34;测试key&#34;,
+  &#34;updated_at&#34;: &#34;2019-12-08 13:59:07&#34;,
+  &#34;value&#34;: &#34;test&#34;
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \"created_at\": \"2019-12-08 13:59:07\",\n  \"description\": \"测试\",\n  \"id\": 11,\n  \"key\": \"test\",\n  \"name\": \"测试key\",\n  \"updated_at\": \"2019-12-08 13:59:07\",\n  \"value\": \"test\"\n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-3-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="4top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiM2JmNDAxMTgyZTZiNGRhMzlkN2NmOGJmMWI2N2RlMTMiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.0DFfao3fLN5J_6n2mLWf99n-B5nvnvwxYaB8zo-L1lY</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-4-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: [
+  {
+   &#34;created_at&#34;: &#34;2019-12-08 13:59:08&#34;,
+   &#34;description&#34;: &#34;测试&#34;,
+   &#34;id&#34;: 11,
+   &#34;key&#34;: &#34;test&#34;,
+   &#34;name&#34;: &#34;测试key&#34;,
+   &#34;updated_at&#34;: &#34;2019-12-08 13:59:08&#34;,
+   &#34;value&#34;: &#34;test&#34;
+  }
+ ],
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": [\n  {\n   \"created_at\": \"2019-12-08 13:59:08\",\n   \"description\": \"测试\",\n   \"id\": 11,\n   \"key\": \"test\",\n   \"name\": \"测试key\",\n   \"updated_at\": \"2019-12-08 13:59:08\",\n   \"value\": \"test\"\n  }\n ],\n \"success\": true\n}\n");
+                            document.getElementById('response-body-4-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="5top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiM2JmNDAxMTgyZTZiNGRhMzlkN2NmOGJmMWI2N2RlMTMiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.0DFfao3fLN5J_6n2mLWf99n-B5nvnvwxYaB8zo-L1lY</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>description</td>
+                        <td> %E6%B5%8B%E8%AF%95%E6%9B%B4%E6%96%B0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>id</td>
+                        <td> 11</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>key</td>
+                        <td> test</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>name</td>
+                        <td> %E6%B5%8B%E8%AF%95key</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>value</td>
+                        <td> test</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-5-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  &#34;created_at&#34;: &#34;2019-12-08 13:59:08&#34;,
+  &#34;description&#34;: &#34;测试更新&#34;,
+  &#34;id&#34;: 11,
+  &#34;key&#34;: &#34;test&#34;,
+  &#34;name&#34;: &#34;测试key&#34;,
+  &#34;updated_at&#34;: &#34;2019-12-08 13:59:07&#34;,
+  &#34;value&#34;: &#34;test&#34;
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \"created_at\": \"2019-12-08 13:59:08\",\n  \"description\": \"测试更新\",\n  \"id\": 11,\n  \"key\": \"test\",\n  \"name\": \"测试key\",\n  \"updated_at\": \"2019-12-08 13:59:07\",\n  \"value\": \"test\"\n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-5-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="6top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiM2JmNDAxMTgyZTZiNGRhMzlkN2NmOGJmMWI2N2RlMTMiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.0DFfao3fLN5J_6n2mLWf99n-B5nvnvwxYaB8zo-L1lY</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>id</td>
+                        <td> 11</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-6-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: null,
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": null,\n \"success\": true\n}\n");
+                            document.getElementById('response-body-6-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="7top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-7-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-7-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="8top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiNzQyM2YzNmQ1ZTVmNDcyNGJhNTE2NzUyMjlkYWIyMDgiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.f1PLVmJtcT7FjtM4h4y0R_ANsXLT-RrXqHUkG7-pgKo</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>description</td>
+                        <td> %E6%B5%8B%E8%AF%95</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>name</td>
+                        <td> test</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-8-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  &#34;created_at&#34;: &#34;2019-12-08 13:59:07&#34;,
+  &#34;description&#34;: &#34;测试&#34;,
+  &#34;id&#34;: 14,
+  &#34;name&#34;: &#34;test&#34;,
+  &#34;updated_at&#34;: &#34;2019-12-08 13:59:07&#34;
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \"created_at\": \"2019-12-08 13:59:07\",\n  \"description\": \"测试\",\n  \"id\": 14,\n  \"name\": \"test\",\n  \"updated_at\": \"2019-12-08 13:59:07\"\n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-8-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="9top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiNzQyM2YzNmQ1ZTVmNDcyNGJhNTE2NzUyMjlkYWIyMDgiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.f1PLVmJtcT7FjtM4h4y0R_ANsXLT-RrXqHUkG7-pgKo</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-9-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: [
+  {
+   &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+   &#34;description&#34;: &#34;&#34;,
+   &#34;id&#34;: 1,
+   &#34;name&#34;: &#34;测试&#34;,
+   &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+  },
+  {
+   &#34;created_at&#34;: &#34;2019-11-29 14:20:07&#34;,
+   &#34;description&#34;: &#34;&#34;,
+   &#34;id&#34;: 2,
+   &#34;name&#34;: &#34;ceshi&#34;,
+   &#34;updated_at&#34;: &#34;2019-11-29 14:20:07&#34;
+  },
+  {
+   &#34;created_at&#34;: &#34;2019-12-01 16:37:17&#34;,
+   &#34;description&#34;: &#34;&#34;,
+   &#34;id&#34;: 5,
+   &#34;name&#34;: &#34;hahah&#34;,
+   &#34;updated_at&#34;: &#34;2019-12-01 16:37:17&#34;
+  },
+  {
+   &#34;created_at&#34;: &#34;2019-12-08 13:59:08&#34;,
+   &#34;description&#34;: &#34;测试&#34;,
+   &#34;id&#34;: 14,
+   &#34;name&#34;: &#34;test&#34;,
+   &#34;updated_at&#34;: &#34;2019-12-08 13:59:08&#34;
+  }
+ ],
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": [\n  {\n   \"created_at\": \"2019-11-29 14:20:07\",\n   \"description\": \"\",\n   \"id\": 1,\n   \"name\": \"测试\",\n   \"updated_at\": \"2019-11-29 14:20:07\"\n  },\n  {\n   \"created_at\": \"2019-11-29 14:20:07\",\n   \"description\": \"\",\n   \"id\": 2,\n   \"name\": \"ceshi\",\n   \"updated_at\": \"2019-11-29 14:20:07\"\n  },\n  {\n   \"created_at\": \"2019-12-01 16:37:17\",\n   \"description\": \"\",\n   \"id\": 5,\n   \"name\": \"hahah\",\n   \"updated_at\": \"2019-12-01 16:37:17\"\n  },\n  {\n   \"created_at\": \"2019-12-08 13:59:08\",\n   \"description\": \"测试\",\n   \"id\": 14,\n   \"name\": \"test\",\n   \"updated_at\": \"2019-12-08 13:59:08\"\n  }\n ],\n \"success\": true\n}\n");
+                            document.getElementById('response-body-9-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="10top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiNzQyM2YzNmQ1ZTVmNDcyNGJhNTE2NzUyMjlkYWIyMDgiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.f1PLVmJtcT7FjtM4h4y0R_ANsXLT-RrXqHUkG7-pgKo</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>description</td>
+                        <td> %E6%B5%8B%E8%AF%95%E6%9B%B4%E6%96%B0</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>id</td>
+                        <td> 14</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>name</td>
+                        <td> test</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-10-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: {
+  &#34;created_at&#34;: &#34;2019-12-08 13:59:08&#34;,
+  &#34;description&#34;: &#34;测试更新&#34;,
+  &#34;id&#34;: 14,
+  &#34;name&#34;: &#34;test&#34;,
+  &#34;updated_at&#34;: &#34;2019-12-08 13:59:07&#34;
+ },
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": {\n  \"created_at\": \"2019-12-08 13:59:08\",\n  \"description\": \"测试更新\",\n  \"id\": 14,\n  \"name\": \"test\",\n  \"updated_at\": \"2019-12-08 13:59:07\"\n },\n \"success\": true\n}\n");
+                            document.getElementById('response-body-10-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="11top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ3LCJpYXQiOjE1NzU3ODQ3NDcsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiNzQyM2YzNmQ1ZTVmNDcyNGJhNTE2NzUyMjlkYWIyMDgiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.f1PLVmJtcT7FjtM4h4y0R_ANsXLT-RrXqHUkG7-pgKo</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>id</td>
+                        <td> 14</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-11-0">{
+ &#34;errorCode&#34;: 0,
+ &#34;message&#34;: &#34;&#34;,
+ &#34;data&#34;: null,
+ &#34;success&#34;: true
+}
+</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\n \"errorCode\": 0,\n \"message\": \"\",\n \"data\": null,\n \"success\": true\n}\n");
+                            document.getElementById('response-body-11-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="12top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td>  application/x-www-form-urlencoded</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Post Form </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>password</td>
+                        <td> 123456</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>ref</td>
+                        <td> aaa</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>username</td>
+                        <td> admin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-12-0">{&#34;errorCode&#34;:0,&#34;message&#34;:&#34;&#34;,&#34;data&#34;:{&#34;ref&#34;:&#34;aaa&#34;,&#34;token&#34;:&#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTU3NTgyMDc0OCwiaWF0IjoxNTc1Nzg0NzQ4LCJpZCI6MSwiaXNzIjoiYmxvZy1hZG1pbiIsImp0aSI6ImIwZGJkNDhkZmY1YjRlNzVhNGU3NjYxNzgwNTYyMzY4IiwicnVsZSI6IueuoeeQhuWRmCIsInVzZXJfbmFtZSI6ImFkbWluIn0.YZZjN5Qa9PE0rNYfQBbFDi0vvAIv4lmKlaf87QlUVto&#34;,&#34;user&#34;:{&#34;ID&#34;:1,&#34;avatar&#34;:&#34;&#34;,&#34;created_at&#34;:&#34;2019-11-14 16:37:26&#34;,&#34;description&#34;:&#34;轻轻地我走了，正如我轻轻的来。&#34;,&#34;email&#34;:&#34;&#34;,&#34;nickname&#34;:&#34;管理员&#34;,&#34;roles&#34;:&#34;管理员&#34;,&#34;status&#34;:0,&#34;type&#34;:0,&#34;updated_at&#34;:&#34;2019-12-08 13:59:08&#34;,&#34;username&#34;:&#34;admin&#34;}},&#34;success&#34;:true}</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\"errorCode\":0,\"message\":\"\",\"data\":{\"ref\":\"aaa\",\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsImV4cCI6MTU3NTgyMDc0OCwiaWF0IjoxNTc1Nzg0NzQ4LCJpZCI6MSwiaXNzIjoiYmxvZy1hZG1pbiIsImp0aSI6ImIwZGJkNDhkZmY1YjRlNzVhNGU3NjYxNzgwNTYyMzY4IiwicnVsZSI6IueuoeeQhuWRmCIsInVzZXJfbmFtZSI6ImFkbWluIn0.YZZjN5Qa9PE0rNYfQBbFDi0vvAIv4lmKlaf87QlUVto\",\"user\":{\"ID\":1,\"avatar\":\"\",\"created_at\":\"2019-11-14 16:37:26\",\"description\":\"轻轻地我走了，正如我轻轻的来。\",\"email\":\"\",\"nickname\":\"管理员\",\"roles\":\"管理员\",\"status\":0,\"type\":0,\"updated_at\":\"2019-12-08 13:59:08\",\"username\":\"admin\"}},\"success\":true}");
+                            document.getElementById('response-body-12-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+        <div id="13top"  role="tabpanel" class="tab-pane col-md-10">
+            
+                
+                <p> <H4> Request Headers </H4> </p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Authorization</td>
+                        <td>  Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IjE5ODY0MTA4MDZAcXEuY29tIiwiZXhwIjoxNTc1ODIwNzQ4LCJpYXQiOjE1NzU3ODQ3NDgsImlkIjoxLCJpc3MiOiJibG9nLWFkbWluIiwianRpIjoiZWVhMmQ2M2NkZjdmNDVmOWEyYTZhOTgxODIyOGE1MmMiLCJydWxlIjoi566h55CG5ZGYIiwidXNlcl9uYW1lIjoiYWRtaW4ifQ.1HquXlzMeCF-S70ciNiI6uSECAcfW89iL_W-zzGLmR8</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                
+                
+                <p><h4> Response Code</h4></p>
+                <pre class="prettyprint lang-json">200</pre>
+                
+                <p><h4> Response Headers</h4></p>
+                <table class="table table-bordered table-striped">
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                    </tr>
+                    
+                    <tr>
+                        <td>Content-Type</td>
+                        <td> application/json; charset=UTF-8</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Vary</td>
+                        <td> Origin</td>
+                    </tr>
+                    
+                </table>
+                
+                
+                <p> <H4> Response Body </H4> </p>
+                <pre class="prettyprint" id="response-body-13-0">{&#34;errorCode&#34;:0,&#34;message&#34;:&#34;&#34;,&#34;data&#34;:&#34;res:ok&#34;,&#34;success&#34;:true}</pre>
+                <script>
+                     
+                    var responseHeader ={"Content-Type":"application/json; charset=UTF-8","Vary":"Origin"};
+
+                    if (responseHeader["Content-Type"].includes("application/json")){
+                        try {
+                            var jsonStr = spaceJson("{\"errorCode\":0,\"message\":\"\",\"data\":\"res:ok\",\"success\":true}");
+                            document.getElementById('response-body-13-0').innerHTML = syntaxHighlight(jsonStr);
+                        } catch (e) {
+                             
+                        }
+                    }
+                </script>
+                
+                <hr>
+            
+        </div>
+        
+    </div>
+</div>
+</div>
+<hr>
+</body>
+</html>
