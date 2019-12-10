@@ -30,7 +30,9 @@ func JwtHandler(ctx context.Context) {
 		SigningMethod: jwt.SigningMethodHS256,
 		//验证未通过错误处理方式
 		ErrorHandler: func(ctx context.Context, err error) {
-			ctx.JSON(simple.JsonErrorMsg(err.Error()))
+			ctx.StatusCode(401)
+			ctx.JSON(
+				simple.JsonErrorMsg(err.Error()))
 		},
 		Expiration: true,
 	})

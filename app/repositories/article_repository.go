@@ -6,6 +6,7 @@ import (
 	"blog/database"
 	"errors"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
 )
 
 type ArticleRepository struct {
@@ -23,16 +24,18 @@ func NewArticleRepository(db *gorm.DB) *ArticleRepository {
 }
 
 // 获取文章列表
-func (this *ArticleRepository) List() (list []models.Article, err error) {
-	db := this.db.Preload("Category").
+func (this *ArticleRepository) List(paging *simple.Paging) []*models.Article {
+	articles := make([]*models.Article, paging.Limit)
+
+	this.db.Preload("Category").
 		Preload("User").
 		Preload("ArticleTag").
 		Preload("ArticleTag.Tag").
-		Find(&list)
-	if db.RecordNotFound() {
-		return list, nil
-	}
-	return list, db.Error
+		Offset(paging.Offset()).Limit(paging.Limit).
+		Find(&articles)
+
+	this.db.Model(&models.Article{}).Count(&paging.Total)
+	return articles
 }
 
 // 创建文章

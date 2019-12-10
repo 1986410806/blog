@@ -3,9 +3,8 @@ package repositories
 import (
 	"blog/app/models"
 	"blog/database"
-	"blog/database/cache"
-	cache2 "github.com/go-redis/cache/v7"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
 	"time"
 )
 
@@ -18,20 +17,10 @@ func NewUserRepository() *UserRepository {
 		db: database.DB()}
 }
 
-func (this *UserRepository) List() (users []models.User) {
-	var cached = cache.GetCache()
-	err := cached.Once(&cache2.Item{
-		Key:        "user:list",
-		Object:     &users,
-		Expiration: 100 * time.Second,
-		Func: func() (i interface{}, e error) {
-			err := this.db.Find(&users).Error
-			return users, err
-		},
-	})
-	if err != nil {
-		panic(err)
-	}
+func (this *UserRepository) List(paging *simple.Paging) []*models.User {
+	users := make([]*models.User, paging.Limit)
+	this.db.Offset(paging.Offset()).Limit(paging.Limit).Find(&users)
+	this.db.Model(&models.User{}).Count(&paging.Total)
 	return users
 }
 

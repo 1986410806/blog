@@ -23,7 +23,7 @@ func (userResponse userResponse) Users(users []models.User) (list responses.Resu
 
 func (userResponse userResponse) User(user *models.User) responses.Result {
 	return responses.Result{
-		"ID":          user.ID,
+		"id":          user.ID,
 		"username":    user.Username.String,
 		"email":       user.Email.String,
 		"nickname":    user.Nickname,

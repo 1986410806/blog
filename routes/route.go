@@ -34,6 +34,8 @@ func adminRoute(api *iris.Application) {
 			auth.Party("/system/config").Handle(adminv1.NewSystemConfigController())
 			// 用户相关
 			auth.Party("/user").Handle(adminv1.NewUserController())
+			// 栏目
+			auth.Party("/category").Handle(adminv1.NewCategoryController())
 			// 标签
 			auth.Party("/tag").Handle(adminv1.NewTagController())
 			// 文章

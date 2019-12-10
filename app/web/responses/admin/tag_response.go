@@ -8,9 +8,9 @@ import (
 type TagResponse struct {
 }
 
-func (r TagResponse) Tags(tags []models.Tag) (list responses.Results) {
+func (r TagResponse) Tags(tags []*models.Tag) (list responses.Results) {
 	for _, tag := range tags {
-		list = append(list, r.Tag(&tag))
+		list = append(list, r.Tag(tag))
 	}
 	return list
 }

@@ -36,12 +36,19 @@ func (this *SystemConfigController) GetConfig() *simple.JsonResult {
  * @return json []models.SysConfig{}
  */
 func (c *SystemConfigController) GetList() *simple.JsonResult {
-	list, err := c.SystemConfigRepository.ConfigList()
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+
+	var page = &simple.Paging{
+		Page:  simple.FormValueIntDefault(c.Ctx, "page", 1),
+		Limit: simple.FormValueIntDefault(c.Ctx, "limit", 10),
+		Total: 0,
 	}
+	list := c.SystemConfigRepository.ConfigList(page)
+
 	return simple.JsonData(
-		c.SystemConfigResponse.List(list))
+		simple.PageResult{
+			Page:    page,
+			Results: c.SystemConfigResponse.List(list),
+		})
 }
 
 /**

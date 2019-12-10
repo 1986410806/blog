@@ -37,14 +37,20 @@ func TestSystemConfigCurd(t *testing.T) {
 	// 列表
 	out := repositories.NewSystemConfigRepository().GetByKey(data["key"].(string))
 
-	data["description"] = "测试更新"
+	page := map[string]int{
+		"page":  1,
+		"limit": 10,
+	}
 	test.GET("/admin/v1/system/config/list").
 		WithHeader("Authorization", "Bearer "+token).
+		WithQueryObject(page).
 		Expect().Status(httptest.StatusOK).
 		JSON().Object().
 		ValueEqual("errorCode", 0).
 		ValueEqual("success", true)
 	// 更新
+	data["description"] = "测试更新"
+
 	test.POST("/admin/v1/system/config/update").
 		WithHeader("Authorization", "Bearer "+token).
 		WithForm(data).

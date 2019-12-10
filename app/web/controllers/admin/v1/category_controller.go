@@ -9,22 +9,22 @@ import (
 	"github.com/mlogclub/simple"
 )
 
-type TagController struct {
-	Ctx           iris.Context
-	TagRepository *repositories.TagRepository
-	TagResponse   admin.TagResponse
+type CategoryController struct {
+	Ctx                iris.Context
+	CategoryRepository *repositories.CategoryRepository
+	CategoryResponse   admin.CategoryResponse
 }
 
-func NewTagController() *TagController {
-	return &TagController{
-		TagRepository: repositories.NewTagRepository(
+func NewCategoryController() *CategoryController {
+	return &CategoryController{
+		CategoryRepository: repositories.NewCategoryRepository(
 			database.DB())}
 }
 
 /**
- * 新增标签列表
+ * 新增栏目列表
  */
-func (c TagController) PostCreate() *simple.JsonResult {
+func (c CategoryController) PostCreate() *simple.JsonResult {
 	var (
 		name        = c.Ctx.FormValue("name")
 		description = c.Ctx.FormValue("description")
@@ -32,7 +32,7 @@ func (c TagController) PostCreate() *simple.JsonResult {
 	if name == "" {
 		return simple.JsonErrorMsg("参数不能为空")
 	}
-	tag, err := c.TagRepository.Create(&models.Tag{
+	Category, err := c.CategoryRepository.Create(&models.Category{
 		Name:        name,
 		Description: description,
 		Status:      0,
@@ -41,32 +41,31 @@ func (c TagController) PostCreate() *simple.JsonResult {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(
-		c.TagResponse.Tag(tag))
+		c.CategoryResponse.Category(Category))
 }
 
 /**
- * 获取标签列表
+ * 获取栏目列表
  */
-func (c TagController) GetList() *simple.JsonResult {
+func (c CategoryController) GetList() *simple.JsonResult {
 
 	var page = &simple.Paging{
 		Page:  simple.FormValueIntDefault(c.Ctx, "page", 1),
 		Limit: simple.FormValueIntDefault(c.Ctx, "limit", 10),
 		Total: 0,
 	}
-	list := c.TagRepository.TagList(page)
-
+	list := c.CategoryRepository.CategoryList(page)
 	return simple.JsonData(
 		simple.PageResult{
 			Page:    page,
-			Results: c.TagResponse.Tags(list),
+			Results: c.CategoryResponse.Categorys(list),
 		})
 }
 
 /**
- * 编辑标签
+ * 编辑栏目
  */
-func (c TagController) PostUpdate() *simple.JsonResult {
+func (c CategoryController) PostUpdate() *simple.JsonResult {
 	id, err := simple.FormValueInt(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
@@ -75,23 +74,23 @@ func (c TagController) PostUpdate() *simple.JsonResult {
 		"name":        c.Ctx.FormValue("name"),
 		"description": c.Ctx.FormValue("description"),
 	}
-	tag, err := c.TagRepository.UpdateById(id, data)
+	Category, err := c.CategoryRepository.UpdateById(id, data)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
 	return simple.JsonData(
-		c.TagResponse.Tag(tag))
+		c.CategoryResponse.Category(Category))
 }
 
 /**
- * 删除标签列表
+ * 删除栏目列表
  */
-func (c TagController) PostDel() *simple.JsonResult {
+func (c CategoryController) PostDel() *simple.JsonResult {
 	id, err := simple.FormValueInt(c.Ctx, "id")
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}
-	err = c.TagRepository.DelById(id)
+	err = c.CategoryRepository.DelById(id)
 	if err != nil {
 		return simple.JsonErrorMsg(err.Error())
 	}

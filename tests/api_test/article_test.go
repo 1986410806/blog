@@ -67,8 +67,13 @@ func TestArticleList(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+	page := map[string]int{
+		"page":  1,
+		"limit": 10,
+	}
 	test.GET("/admin/v1/article/list").
 		WithHeader("Authorization", "Bearer "+token).
+		WithQueryObject(page).
 		Expect().Status(httptest.StatusOK).
 		JSON().Object().
 		ValueEqual("errorCode", 0).

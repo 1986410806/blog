@@ -35,8 +35,13 @@ func TestTagCurd(t *testing.T) {
 		ValueEqual("success", true)
 	out := repositories.NewTagRepository(database.DB()).GetByName(data["name"].(string))
 	// 列表
+	page := map[string]int{
+		"page":  1,
+		"limit": 10,
+	}
 	test.GET("/admin/v1/tag/list").
 		WithHeader("Authorization", "Bearer "+token).
+		WithQueryObject(page).
 		Expect().Status(httptest.StatusOK).
 		JSON().Object().
 		ValueEqual("errorCode", 0).

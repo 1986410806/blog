@@ -69,12 +69,20 @@ func (this ArticleController) PostCreate() *simple.JsonResult {
  * 获取文章列表
  */
 func (c ArticleController) GetList() *simple.JsonResult {
-	list, err := c.ArticleRepository.List()
-	if err != nil {
-		return simple.JsonErrorMsg(err.Error())
+
+	var page = &simple.Paging{
+		Page:  simple.FormValueIntDefault(c.Ctx, "page", 1),
+		Limit: simple.FormValueIntDefault(c.Ctx, "limit", 10),
+		Total: 0,
 	}
+
+	list := c.ArticleRepository.List(page)
+
 	return simple.JsonData(
-		c.ArticleResponse.List(list))
+		simple.PageResult{
+			Page:    page,
+			Results: c.ArticleResponse.List(list),
+		})
 }
 
 /**

@@ -5,6 +5,7 @@ import (
 	"blog/database"
 	"errors"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
 	"time"
 )
 
@@ -19,9 +20,11 @@ func NewSystemConfigRepository() *SystemConfigRepository {
 }
 
 // 获取配置列表
-func (this *SystemConfigRepository) ConfigList() (list []models.SysConfig, err error) {
-	err = this.db.Find(&list).Error
-	return list, err
+func (this *SystemConfigRepository) ConfigList(paging *simple.Paging) []*models.SysConfig {
+	list := make([]*models.SysConfig, paging.Limit)
+	this.db.Offset(paging.Offset()).Limit(paging.Limit).Find(&list)
+	this.db.Model(&models.SysConfig{}).Count(&paging.Total)
+	return list
 }
 
 // 创建配置

@@ -8,9 +8,9 @@ import (
 type SystemConfigResponse struct {
 }
 
-func (r SystemConfigResponse) List(models []models.SysConfig) (list responses.Results) {
+func (r SystemConfigResponse) List(models []*models.SysConfig) (list responses.Results) {
 	for _, model := range models {
-		list = append(list, r.Item(&model))
+		list = append(list, r.Item(model))
 	}
 	return list
 }

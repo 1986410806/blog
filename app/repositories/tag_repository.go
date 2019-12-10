@@ -4,6 +4,7 @@ import (
 	"blog/app/models"
 	"errors"
 	"github.com/jinzhu/gorm"
+	"github.com/mlogclub/simple"
 	"time"
 )
 
@@ -17,9 +18,11 @@ func NewTagRepository(db *gorm.DB) *TagRepository {
 }
 
 // 获取标签列表
-func (this *TagRepository) TagList() (list []models.Tag, err error) {
-	err = this.db.Find(&list).Error
-	return list, err
+func (this *TagRepository) TagList(paging *simple.Paging) []*models.Tag {
+	list := make([]*models.Tag, paging.Limit)
+	this.db.Offset(paging.Offset()).Limit(paging.Limit).Find(&list)
+	this.db.Model(&models.Tag{}).Count(&paging.Total)
+	return list
 }
 
 // 创建标签

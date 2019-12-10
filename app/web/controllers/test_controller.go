@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"blog/app/repositories"
-	"blog/app/web/responses/admin"
 	"github.com/kataras/iris/v12"
 	"github.com/mlogclub/simple"
 )
@@ -21,6 +20,18 @@ func NewTestController() *TestController {
 // 用户列表接口
 // 获取所有合法用户
 func (this TestController) Any() *simple.JsonResult {
-	list := admin.UserResponse.Users(this.UserRepository.List())
-	return simple.JsonData(list)
+
+	var page = &simple.Paging{
+		Page:  simple.FormValueIntDefault(this.Ctx, "page", 1),
+		Limit: simple.FormValueIntDefault(this.Ctx, "limit", 10),
+		Total: 0,
+	}
+
+	list := this.UserRepository.List(page)
+
+	return simple.JsonData(
+		simple.PageResult{
+			Page:    page,
+			Results: list,
+		})
 }

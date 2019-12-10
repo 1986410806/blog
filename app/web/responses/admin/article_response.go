@@ -22,8 +22,7 @@ func (ArticleResponse) Create(article *models.Article) responses.Result {
 	}
 }
 
-func (res ArticleResponse) List(articles []models.Article) (results responses.Results) {
-
+func (res ArticleResponse) List(articles []*models.Article) (results responses.Results) {
 	for _, article := range articles {
 		result := responses.Result{
 			"id":           article.ID,
@@ -42,7 +41,6 @@ func (res ArticleResponse) List(articles []models.Article) (results responses.Re
 
 //
 func (res ArticleResponse) ArticleTags(articleTags []*models.ArticleTag) (results responses.Results) {
-
 	for _, articleTag := range articleTags {
 		tag := res.TagResponse.Tag(articleTag.Tag)
 		results = append(results, tag)
