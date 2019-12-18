@@ -79,7 +79,7 @@ type ThirdAccount struct {
 // 分类
 type Category struct {
 	gorm.Model
-	Name        string `gorm:"size:32;unique;not null" json:"name" form:"name"`
+	Name        string `gorm:"size:50;unique;not null" json:"name" form:"name"`
 	Description string `gorm:"size:1024" json:"description" form:"description"`
 	Status      int    `gorm:"index:idx_status;not null" json:"status" form:"status"`
 }
