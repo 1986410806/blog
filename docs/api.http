@@ -1,0 +1,18 @@
+### login
+POST {{host}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "1986410806@qq.com",
+  "password": "zhh123",
+  "type": 1
+}
+
+###
+GET {{host}}/user/current
+Authorization: Bearer {{token}}
+
+
+### qiniu token
+GET {{host}}/qiniu/token
+Authorization: Bearer {{token}}

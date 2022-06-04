@@ -1,0 +1,40 @@
+server:
+  address: ":8000"
+  openapiPath: "/api.json"
+  swaggerPath: "/swagger"
+
+logger:
+  level: "all"
+  stdout: true
+
+database:
+  default:
+    type: "mysql"
+    host: "127.0.0.1"
+    port: "3306"
+    user: "root"
+    pass: "zhh123"
+    name: "blog"
+    loc: "local"
+    debug: "true"
+    dryRun: "false"
+    charset: "utf8"
+    timezone: "Asia/Shanghai"
+    maxIdle: "10"
+    maxOpen: "100"
+    maxLifetime: "30s"
+
+
+token:
+  secret: "com.wang-fu-gui"
+
+qiniu:
+  Key: "bMAjLTI9W52tgx4o-cYX6h-kgEbnOLjcvmuvAsZJ"
+  secret: "sYGGxMVJTv4nz0m7YbCcfHBHeq6c1Vmz4n9UE9HW"
+
+
+gfcli:
+  gen:
+    dao:
+      - link: "mysql:root:zhh123@tcp(127.0.0.1:3306)/blog"
+        jsonCase: "Snake"
